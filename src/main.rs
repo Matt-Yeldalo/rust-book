@@ -1,24 +1,37 @@
+use rand::Rng;
+
 fn main() {
     println!("Guess the number");
     println!("Input your guess");
 
-    let number: i32 = 99;
+    let number = rand::thread_rng().gen_range(1..=100);
+    let mut guess_count: i8 = 0;
 
-    while !guess(number) {}
+    loop {
+        if guess(number, &mut guess_count) {
+            break;
+        }
+    }
 }
 
-fn guess(answer: i32) -> bool {
+fn guess(answer: i32, guess_count: &mut i8) -> bool {
     let mut guess = String::new();
     std::io::stdin()
         .read_line(&mut guess)
         .expect("Failed to read line");
-    let final_guess: i32 = guess.trim().parse::<i32>().expect("Something went wrong");
+    let guess: i32 = guess.trim().parse::<i32>().expect("Something went wrong");
 
-    if final_guess == answer {
-        println!("You got lucky");
+    if guess == answer {
+        println!("You guessed it right in {} tries!", guess_count);
         return true;
-    } else {
-        println!("Wrong, try again");
-        return false;
     }
+
+    *guess_count += 1;
+    if guess < answer {
+        println!("Too low!");
+    } else {
+        println!("Too high!");
+    }
+
+    return false;
 }
