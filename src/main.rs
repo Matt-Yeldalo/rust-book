@@ -19,7 +19,14 @@ fn guess(answer: i32, guess_count: &mut i8) -> bool {
     std::io::stdin()
         .read_line(&mut guess)
         .expect("Failed to read line");
-    let guess: i32 = guess.trim().parse::<i32>().expect("Something went wrong");
+    // let guess: i32 = guess.trim().parse::<i32>().expect("Something went wrong");
+    let guess: i32 = match guess.trim().parse() {
+        Ok(num) => num,
+        Err(_) => {
+            println!("Please enter a valid number!");
+            return false;
+        }
+    };
 
     if guess == answer {
         println!("You guessed it right in {} tries!", guess_count);
